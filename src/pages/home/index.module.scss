@@ -1,0 +1,222 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  padding: 0 $page-padding;
+  padding-bottom: 40rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 顶部 Banner */
+.hero {
+  margin-top: 24rpx;
+  padding: 48rpx 32rpx;
+  background: linear-gradient(135deg, #FF6B35 0%, #E05A2B 100%);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+
+  &Title {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: #fff;
+    margin-bottom: 12rpx;
+  }
+
+  &Subtitle {
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: $line-height-normal;
+  }
+}
+
+.locationTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 16rpx;
+  padding: 8rpx 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-xs;
+
+  &Icon {
+    font-size: $font-size-sm;
+  }
+
+  &Text {
+    font-size: $font-size-sm;
+    color: #fff;
+    font-weight: $font-weight-medium;
+  }
+}
+
+/* 分类导航 */
+.categoriesScroll {
+  margin-top: 32rpx;
+  white-space: nowrap;
+}
+
+.categories {
+  display: inline-flex;
+  gap: 24rpx;
+  padding-right: 32rpx;
+}
+
+.categoryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28rpx 24rpx;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+  min-width: 120rpx;
+  border: 2rpx solid transparent;
+
+  &Active {
+    background: rgba(255, 107, 53, 0.15);
+    border-color: $color-primary;
+  }
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.97);
+  }
+
+  &Icon {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: $radius-round;
+    background: $color-tag-bg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36rpx;
+    margin-bottom: 16rpx;
+  }
+
+  &Label {
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+/* 区块标题 */
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40rpx;
+  margin-bottom: 24rpx;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionMore {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+/* 服务卡片列表 */
+.serviceList {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.serviceCard {
+  display: flex;
+  gap: 24rpx;
+  padding: 24rpx;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.99);
+  }
+
+  &Image {
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: $radius-sm;
+    flex-shrink: 0;
+  }
+
+  &Content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+  }
+
+  &Name {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &Desc {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+    margin-top: 8rpx;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    line-height: $line-height-normal;
+  }
+
+  &Footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12rpx;
+  }
+
+  &Price {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-price;
+  }
+
+  &Unit {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    font-weight: $font-weight-normal;
+  }
+
+  &Duration {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    padding: 4rpx 12rpx;
+    background: $color-bg-hover;
+    border-radius: $radius-xs;
+  }
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+  color: $color-text-tertiary;
+
+  &Text {
+    font-size: $font-size-sm;
+    margin-top: 16rpx;
+  }
+}
