@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { callFunction } from '@/services/cloud';
-import type { UserInfo } from '@/types';
 
 export function useAdmin() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -21,10 +20,10 @@ export function useAdmin() {
     }
   }, []);
 
-  const bindAdmin = useCallback(async () => {
+  const bindAdmin = useCallback(async (inviteCode: string) => {
     try {
       setLoading(true);
-      await callFunction('bindAdmin');
+      await callFunction('bindAdmin', { inviteCode });
       setIsAdmin(true);
       return true;
     } catch (err) {

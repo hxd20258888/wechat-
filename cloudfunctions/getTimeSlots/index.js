@@ -5,9 +5,9 @@ const db = cloud.database()
 exports.main = async (event, context) => {
   try {
     const { date } = event
-    let query = db.collection('time_slots')
+    let query = db.collection('time_slots').where({ isAvailable: true })
     if (date) {
-      query = query.where({ date })
+      query = db.collection('time_slots').where({ date, isAvailable: true })
     }
     const res = await query.orderBy('startTime', 'asc').get()
     return { code: 0, message: 'success', data: res.data }

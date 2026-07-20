@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: '车音工坊'
+  navigationBarTitleText: '小亮云办公'
 })

@@ -54,16 +54,6 @@ function HomePage() {
 
   return (
     <View className={styles.page}>
-      {/* Hero Banner */}
-      <View className={styles.hero}>
-        <Text className={styles.heroTitle}>车音工坊</Text>
-        <Text className={styles.heroSubtitle}>专业汽车调音 · 让每一段旅程都有好声音</Text>
-        <View className={styles.locationTag}>
-          <Text className={styles.locationIcon}>📍</Text>
-          <Text className={styles.locationText}>芜湖市</Text>
-        </View>
-      </View>
-
       {/* 分类导航 */}
       <ScrollView scrollX className={styles.categoriesScroll}>
         <View className={styles.categories}>
