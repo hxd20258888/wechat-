@@ -51,10 +51,10 @@ exports.main = async (event, context) => {
     const openid = wxContext.OPENID
     const { action, slotId, ...data } = event
 
-    // 妫€鏌ョ鐞嗗憳鏉冮檺
+    // 检查管理员权限
     const userRes = await db.collection('users').where({ _openid: openid }).get()
     if (!userRes.data[0]?.isAdmin) {
-      return { code: -2, message: '鏃犵鐞嗗憳鏉冮檺', data: null }
+      return { code: -2, message: '检查管理员权限', data: null }
     }
 
     if (action === 'updateWeekly') {
@@ -180,10 +180,10 @@ exports.main = async (event, context) => {
       return { code: 0, message: 'success', data: { _id: slotId } }
     }
 
-    return { code: -1, message: '鏈煡鎿嶄綔', data: null }
+    return { code: -1, message: '未知操作', data: null }
   } catch (err) {
     console.error('[manageTimeSlot] error:', err)
-    return { code: -1, message: err.message || '鏈嶅姟寮傚父', data: null }
+    return { code: -1, message: err.message || '服务异常', data: null }
   }
 }
 

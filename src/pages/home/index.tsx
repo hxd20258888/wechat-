@@ -54,7 +54,7 @@ function HomePage() {
 
   return (
     <View className={styles.page}>
-      {/* 分类导航 */}
+      {/* 分类导航
       <ScrollView scrollX className={styles.categoriesScroll}>
         <View className={styles.categories}>
           <View
@@ -79,7 +79,7 @@ function HomePage() {
             </View>
           ))}
         </View>
-      </ScrollView>
+      </ScrollView> */}
 
       {/* 服务列表 */}
       <View className={styles.sectionHeader}>
