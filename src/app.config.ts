@@ -7,7 +7,8 @@ export default defineAppConfig({
     'pages/admin/index',
     'pages/adminServices/index',
     'pages/adminTimeSlots/index',
-    'pages/adminAppointments/index'
+    'pages/adminAppointments/index',
+    'pages/appointmentDetail/index'
   ],
   window: {
     backgroundTextStyle: 'light',

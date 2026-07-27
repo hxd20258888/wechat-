@@ -194,7 +194,8 @@ function MinePage() {
     Taro.removeStorageSync(USER_STORAGE_KEY);
   };
 
-  const handleCancelAppointment = async (aptId: string) => {
+  const handleCancelAppointment = async (aptId: string, event?: any) => {
+    event?.stopPropagation?.();
     const confirm = await Taro.showModal({
       title: '取消预约',
       content: '确定要取消这个预约吗？'
@@ -213,6 +214,10 @@ function MinePage() {
 
   const handleGoAdmin = () => {
     Taro.navigateTo({ url: '/pages/admin/index' });
+  };
+
+  const handleGoAppointmentDetail = (aptId: string) => {
+    Taro.navigateTo({ url: `/pages/appointmentDetail/index?id=${aptId}` });
   };
 
   const handleBindAdmin = async () => {
@@ -347,7 +352,7 @@ function MinePage() {
           {appointments.length > 0 ? (
             <View className={styles.appointmentList}>
               {appointments.map(apt => (
-                <View key={apt._id} className={styles.appointmentCard}>
+                <View key={apt._id} className={styles.appointmentCard} onClick={() => handleGoAppointmentDetail(apt._id)}>
                   <View className={styles.appointmentCardHeader}>
                     <Text className={styles.appointmentCardName}>{apt.serviceName}</Text>
                     <Text className={`${styles.appointmentCardStatus} ${STATUS_MAP[apt.status]?.className}`}>
@@ -368,7 +373,7 @@ function MinePage() {
                       <Text className={styles.appointmentCardValue}>¥{apt.servicePrice}</Text>
                     </View>
                   </View>
-                  {apt.status === 'pending' && (
+                  {(apt.status === 'pending' || apt.status === 'confirmed') && (
                     <View className={styles.appointmentCardActions}>
                       <View
                         className={`${styles.appointmentCardActionBtn} ${styles.appointmentCardActionBtnCancel}`}

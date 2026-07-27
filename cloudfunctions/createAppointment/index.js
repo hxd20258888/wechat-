@@ -1,5 +1,6 @@
 ﻿const cloud = require('wx-server-sdk')
 const { normalizeTransactionResult } = require('./defaults')
+const { AUTH_REQUIRED_RESPONSE, isAuthorizedUser, buildUserSnapshot } = require('./guards')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
@@ -22,6 +23,12 @@ exports.main = async (event = {}, context) => {
     }
     if (!/^1\d{10}$/.test(String(phone))) {
       return { code: -1, message: '手机号格式不正确', data: null }
+    }
+
+    const userRes = await db.collection('users').where({ _openid: openid }).limit(1).get()
+    const user = userRes.data[0]
+    if (!isAuthorizedUser(user)) {
+      return AUTH_REQUIRED_RESPONSE
     }
 
     const serviceRes = await db.collection('services').doc(serviceId).get()
@@ -86,7 +93,17 @@ exports.main = async (event = {}, context) => {
         }
       })
 
-      return { code: 0, message: 'success', data: { _id: addRes._id } }
+      return {
+        code: 0,
+        message: 'success',
+        data: {
+          _id: addRes._id,
+          status: 'pending',
+          serviceName: currentService.name || serviceName,
+          date,
+          timeSlot
+        }
+      }
     })
 
     return normalizeTransactionResult(transactionResult)

@@ -1,4 +1,6 @@
-const cloud = require('wx-server-sdk')
+﻿const cloud = require('wx-server-sdk')
+const { canTransition, getStatusTimestampField } = require('./statusRules')
+
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
@@ -13,7 +15,41 @@ function getSlotKey(date, startTime, endTime) {
   return `${date}_${startTime}_${endTime}`
 }
 
-exports.main = async (event) => {
+async function findSlotByAppointment(appointment) {
+  const { startTime, endTime } = parseTimeSlot(appointment.timeSlot)
+  if (!startTime || !endTime) return null
+
+  const slotKey = getSlotKey(appointment.date, startTime, endTime)
+  let slotRes = await db.collection('time_slots').where({ slotKey }).limit(1).get()
+  if (!slotRes.data[0]) {
+    slotRes = await db.collection('time_slots').where({
+      date: appointment.date,
+      startTime,
+      endTime
+    }).limit(1).get()
+  }
+  return slotRes.data[0] || null
+}
+
+function buildStatusUpdate(status, openid, isAdmin) {
+  const data = {
+    status,
+    updateTime: db.serverDate(),
+    operatorOpenid: openid
+  }
+
+  const timestampField = getStatusTimestampField(status)
+  if (timestampField) {
+    data[timestampField] = db.serverDate()
+  }
+  if (status === 'cancelled') {
+    data.cancelBy = isAdmin ? 'admin' : 'user'
+  }
+
+  return data
+}
+
+exports.main = async (event = {}) => {
   try {
     const wxContext = cloud.getWXContext()
     const openid = wxContext.OPENID
@@ -26,8 +62,8 @@ exports.main = async (event) => {
       return { code: -1, message: '预约状态无效', data: null }
     }
 
-    const userRes = await db.collection('users').where({ _openid: openid }).get()
-    const isAdmin = !!userRes.data[0]?.isAdmin
+    const userRes = await db.collection('users').where({ _openid: openid }).limit(1).get()
+    const isAdmin = Boolean(userRes.data[0]?.isAdmin)
     const appointmentRes = await db.collection('appointments').doc(appointmentId).get()
     const appointment = appointmentRes.data
     if (!appointment) {
@@ -35,33 +71,14 @@ exports.main = async (event) => {
     }
 
     const isOwner = appointment._openid === openid
-    if (!isAdmin) {
-      if (!isOwner || status !== 'cancelled' || appointment.status !== 'pending') {
-        return { code: -2, message: '无权限更新该预约', data: null }
-      }
+    if (!canTransition({ currentStatus: appointment.status, nextStatus: status, isAdmin, isOwner })) {
+      return { code: -2, message: '无权限更新该预约', data: null }
     }
 
-    const previousStatus = appointment.status
-    const shouldRelease = previousStatus !== 'cancelled' && status === 'cancelled'
-    const shouldRebook = previousStatus === 'cancelled' && status !== 'cancelled'
-
-    let slotId = ''
-    if (shouldRelease || shouldRebook) {
-      const { startTime, endTime } = parseTimeSlot(appointment.timeSlot)
-      const slotKey = getSlotKey(appointment.date, startTime, endTime)
-      let slotRes = await db.collection('time_slots').where({ slotKey }).limit(1).get()
-      if (!slotRes.data[0]) {
-        slotRes = await db.collection('time_slots').where({
-          date: appointment.date,
-          startTime,
-          endTime
-        }).limit(1).get()
-      }
-      const slot = slotRes.data[0]
-      if (!slot) {
-        return { code: -1, message: '预约时段不存在', data: null }
-      }
-      slotId = slot._id
+    const shouldRelease = appointment.status !== 'cancelled' && status === 'cancelled'
+    const slot = shouldRelease ? await findSlotByAppointment(appointment) : null
+    if (shouldRelease && !slot) {
+      return { code: -1, message: '预约时段不存在', data: null }
     }
 
     const transactionResult = await db.runTransaction(async (transaction) => {
@@ -71,56 +88,39 @@ exports.main = async (event) => {
         return { code: -1, message: '预约不存在', data: null }
       }
 
-      if (!isAdmin) {
-        const currentIsOwner = currentAppointment._openid === openid
-        if (!currentIsOwner || status !== 'cancelled' || currentAppointment.status !== 'pending') {
-          return { code: -2, message: '无权限更新该预约', data: null }
-        }
+      const currentIsOwner = currentAppointment._openid === openid
+      if (!canTransition({ currentStatus: currentAppointment.status, nextStatus: status, isAdmin, isOwner: currentIsOwner })) {
+        return { code: -2, message: '无权限更新该预约', data: null }
       }
 
       const currentShouldRelease = currentAppointment.status !== 'cancelled' && status === 'cancelled'
-      const currentShouldRebook = currentAppointment.status === 'cancelled' && status !== 'cancelled'
-
-      if (currentShouldRelease || currentShouldRebook) {
-        if (!slotId) {
+      if (currentShouldRelease) {
+        if (!slot) {
           return { code: -1, message: '预约时段不存在', data: null }
         }
 
-        const currentSlotRes = await transaction.collection('time_slots').doc(slotId).get()
+        const currentSlotRes = await transaction.collection('time_slots').doc(slot._id).get()
         const currentSlot = currentSlotRes.data
         if (!currentSlot) {
           return { code: -1, message: '预约时段不存在', data: null }
         }
 
-        if (currentShouldRebook && (currentSlot.bookedCount || 0) >= currentSlot.maxCount) {
-          return { code: -1, message: '该时段已约满，请选择其他时间', data: null }
-        }
-
-        if (currentShouldRelease) {
-          if ((currentSlot.bookedCount || 0) > 0) {
-            await transaction.collection('time_slots').doc(slotId).update({
-              data: { bookedCount: db.command.inc(-1), updateTime: db.serverDate() }
-            })
-          } else {
-            await transaction.collection('time_slots').doc(slotId).update({
-              data: { bookedCount: 0, updateTime: db.serverDate() }
-            })
+        await transaction.collection('time_slots').doc(slot._id).update({
+          data: {
+            bookedCount: (currentSlot.bookedCount || 0) > 0 ? db.command.inc(-1) : 0,
+            updateTime: db.serverDate()
           }
-        } else {
-          await transaction.collection('time_slots').doc(slotId).update({
-            data: { bookedCount: db.command.inc(1), updateTime: db.serverDate() }
-          })
-        }
+        })
       }
 
       await transaction.collection('appointments').doc(appointmentId).update({
-        data: { status, updateTime: db.serverDate() }
+        data: buildStatusUpdate(status, openid, isAdmin)
       })
 
       return { code: 0, message: 'success', data: { _id: appointmentId, status } }
     })
 
-    return transactionResult.result
+    return transactionResult.result || transactionResult
   } catch (err) {
     console.error('[updateAppointment] error:', err)
     return { code: -1, message: err.message || '服务异常', data: null }

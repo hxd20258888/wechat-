@@ -38,7 +38,12 @@ function AdminAppointmentsPage() {
     loadAppointments();
   }, [loadAppointments]);
 
-  const handleConfirm = async (aptId: string) => {
+  const handleGoAppointmentDetail = (aptId: string) => {
+    Taro.navigateTo({ url: `/pages/appointmentDetail/index?id=${aptId}` });
+  };
+
+  const handleConfirm = async (aptId: string, event?: any) => {
+    event?.stopPropagation?.();
     try {
       await callFunction('updateAppointment', { appointmentId: aptId, status: 'confirmed' });
       Taro.showToast({ title: '已确认', icon: 'success' });
@@ -48,7 +53,8 @@ function AdminAppointmentsPage() {
     }
   };
 
-  const handleComplete = async (aptId: string) => {
+  const handleComplete = async (aptId: string, event?: any) => {
+    event?.stopPropagation?.();
     try {
       await callFunction('updateAppointment', { appointmentId: aptId, status: 'completed' });
       Taro.showToast({ title: '已完成', icon: 'success' });
@@ -75,7 +81,7 @@ function AdminAppointmentsPage() {
       {appointments.length > 0 ? (
         <View className={styles.list}>
           {appointments.map(apt => (
-            <View key={apt._id} className={styles.card}>
+            <View key={apt._id} className={styles.card} onClick={() => handleGoAppointmentDetail(apt._id)}>
               <View className={styles.cardHeader}>
                 <Text className={styles.cardName}>{apt.serviceName}</Text>
                 <Text className={`${styles.cardStatus} ${STATUS_MAP[apt.status]?.className}`}>
@@ -104,14 +110,14 @@ function AdminAppointmentsPage() {
               </View>
               {apt.status === 'pending' && (
                 <View className={styles.cardActions}>
-                  <View className={`${styles.cardBtn} ${styles.cardBtnConfirm}`} onClick={() => handleConfirm(apt._id)}>
+                  <View className={`${styles.cardBtn} ${styles.cardBtnConfirm}`} onClick={(event) => handleConfirm(apt._id, event)}>
                     <Text>确认</Text>
                   </View>
                 </View>
               )}
               {apt.status === 'confirmed' && (
                 <View className={styles.cardActions}>
-                  <View className={`${styles.cardBtn} ${styles.cardBtnComplete}`} onClick={() => handleComplete(apt._id)}>
+                  <View className={`${styles.cardBtn} ${styles.cardBtnComplete}`} onClick={(event) => handleComplete(apt._id, event)}>
                     <Text>完成</Text>
                   </View>
                 </View>

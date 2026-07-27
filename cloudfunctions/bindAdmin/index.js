@@ -1,4 +1,6 @@
-const cloud = require('wx-server-sdk')
+﻿const cloud = require('wx-server-sdk')
+const { ADMIN_AUTH_REQUIRED_RESPONSE, canBindAdmin } = require('./guards')
+
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
@@ -17,11 +19,11 @@ async function logInviteAttempt(openid, inviteId, result) {
   }
 }
 
-exports.main = async (event) => {
+exports.main = async (event = {}) => {
   try {
     const wxContext = cloud.getWXContext()
     const openid = wxContext.OPENID
-    const inviteCode = String((event && event.inviteCode) || '').trim()
+    const inviteCode = String(event.inviteCode || '').trim()
 
     if (!openid) {
       return { code: -1, message: '用户身份无效', data: null }
@@ -30,9 +32,13 @@ exports.main = async (event) => {
       return { code: -1, message: '请输入邀请码', data: null }
     }
 
-    const userRes = await db.collection('users').where({ _openid: openid }).get()
+    const userRes = await db.collection('users').where({ _openid: openid }).limit(1).get()
     const existingUser = userRes.data[0]
-    if (existingUser?.isAdmin) {
+    if (!canBindAdmin(existingUser)) {
+      await logInviteAttempt(openid, '', 'auth_required')
+      return ADMIN_AUTH_REQUIRED_RESPONSE
+    }
+    if (existingUser.isAdmin) {
       return { code: 0, message: 'success', data: { isAdmin: true } }
     }
 
@@ -47,7 +53,6 @@ exports.main = async (event) => {
       return { code: -1, message: '邀请码无效', data: null }
     }
 
-    const existingUserId = existingUser?._id
     const transactionResult = await db.runTransaction(async (transaction) => {
       const currentInviteRes = await transaction.collection('admin_invites').doc(invite._id).get()
       const currentInvite = currentInviteRes.data
@@ -62,13 +67,13 @@ exports.main = async (event) => {
         return { result: 'max_uses_reached' }
       }
 
-      let currentUser = null
-      if (existingUserId) {
-        const currentUserRes = await transaction.collection('users').doc(existingUserId).get()
-        currentUser = currentUserRes.data
-        if (currentUser?.isAdmin) {
-          return { result: 'already_admin' }
-        }
+      const currentUserRes = await transaction.collection('users').doc(existingUser._id).get()
+      const currentUser = currentUserRes.data
+      if (!canBindAdmin(currentUser)) {
+        return { result: 'auth_required' }
+      }
+      if (currentUser.isAdmin) {
+        return { result: 'already_admin' }
       }
 
       await transaction.collection('admin_invites').doc(currentInvite._id).update({
@@ -77,22 +82,9 @@ exports.main = async (event) => {
           updatedAt: db.serverDate()
         }
       })
-      if (currentUser) {
-        await transaction.collection('users').doc(currentUser._id).update({
-          data: { isAdmin: true, updateTime: db.serverDate() }
-        })
-      } else {
-        await transaction.collection('users').add({
-          data: {
-            _openid: openid,
-            nickname: '',
-            avatar: '',
-            phone: '',
-            isAdmin: true,
-            createTime: db.serverDate()
-          }
-        })
-      }
+      await transaction.collection('users').doc(currentUser._id).update({
+        data: { isAdmin: true, updateTime: db.serverDate() }
+      })
       await transaction.collection('admin_invite_logs').add({
         data: { _openid: openid, inviteId: currentInvite._id, result: 'success', usedAt: db.serverDate() }
       })
@@ -100,9 +92,13 @@ exports.main = async (event) => {
       return { result: 'success' }
     })
 
-    const bindResult = transactionResult.result
+    const bindResult = transactionResult.result || transactionResult
     if (bindResult.result === 'already_admin' || bindResult.result === 'success') {
       return { code: 0, message: 'success', data: { isAdmin: true } }
+    }
+    if (bindResult.result === 'auth_required') {
+      await logInviteAttempt(openid, invite._id, 'auth_required')
+      return ADMIN_AUTH_REQUIRED_RESPONSE
     }
 
     await logInviteAttempt(openid, invite._id, bindResult.result)
