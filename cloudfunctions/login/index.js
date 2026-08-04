@@ -1,47 +1,59 @@
 const cloud = require('wx-server-sdk')
+const { buildLoginResponse } = require('./defaults')
+
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
-exports.main = async (event, context) => {
+exports.main = async (event = {}, context) => {
   try {
     const wxContext = cloud.getWXContext()
     const openid = wxContext.OPENID
-    const { nickname, avatar } = event
+    const mode = event.mode || 'check'
 
-    // 查找或创建用户
     const userRes = await db.collection('users').where({ _openid: openid }).get()
-    let user
-    if (userRes.data.length > 0) {
-      // 更新用户信息
-      await db.collection('users').doc(userRes.data[0]._id).update({
-        data: { nickname, avatar, updateTime: db.serverDate() }
-      })
-      user = { ...userRes.data[0], nickname, avatar }
-    } else {
-      // 创建新用户
+    const currentUser = userRes.data[0] || null
+    const decision = buildLoginResponse(mode, currentUser, event)
+
+    if (mode === 'check') {
+      return { code: 0, message: 'success', data: decision.response }
+    }
+
+    if (mode === 'create' && decision.shouldCreate) {
       const addRes = await db.collection('users').add({
         data: {
           _openid: openid,
-          nickname,
-          avatar,
+          ...decision.profile,
           phone: '',
           isAdmin: false,
           createTime: db.serverDate()
         }
       })
-      user = {
+      const user = {
         _id: addRes._id,
         _openid: openid,
-        nickname,
-        avatar,
+        ...decision.profile,
         phone: '',
         isAdmin: false
       }
+
+      return { code: 0, message: 'success', data: { isNewUser: false, user } }
     }
 
-    return { code: 0, message: 'success', data: user }
+    if ((mode === 'create' || mode === 'updateProfile') && currentUser) {
+      await db.collection('users').doc(currentUser._id).update({
+        data: {
+          ...decision.profile,
+          updateTime: db.serverDate()
+        }
+      })
+      const user = { ...currentUser, ...decision.profile }
+
+      return { code: 0, message: 'success', data: { isNewUser: false, user } }
+    }
+
+    throw new Error('Unsupported login mode')
   } catch (err) {
     console.error('[login] error:', err)
-    return { code: -1, message: err.message || '服务异常', data: null }
+    return { code: -1, message: err.message || 'Service error', data: null }
   }
 }

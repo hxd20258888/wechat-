@@ -5,6 +5,11 @@ import type { UserInfo } from '@/types';
 
 const USER_STORAGE_KEY = 'userInfo';
 
+interface LoginResult {
+  isNewUser: boolean;
+  user: UserInfo | null;
+}
+
 export function useUser() {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,14 +28,18 @@ export function useUser() {
     try {
       setLoading(true);
       const profile = await Taro.getUserProfile({ desc: '用于展示用户信息' });
-      const result = await callFunction<UserInfo>('login', {
+      const result = await callFunction<LoginResult>('login', {
+        mode: 'create',
         nickname: profile.userInfo.nickName,
         avatar: profile.userInfo.avatarUrl
       });
-      setUserInfo(result);
+      if (!result.user) {
+        throw new Error('登录失败，请稍后重试');
+      }
+      setUserInfo(result.user);
       setIsLoggedIn(true);
-      Taro.setStorageSync(USER_STORAGE_KEY, result);
-      return result;
+      Taro.setStorageSync(USER_STORAGE_KEY, result.user);
+      return result.user;
     } catch (err) {
       console.error('[useUser] login failed:', err);
       return null;

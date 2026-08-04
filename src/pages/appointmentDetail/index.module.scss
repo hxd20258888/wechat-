@@ -1,0 +1,154 @@
+﻿@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  padding: 24rpx $page-padding 48rpx;
+  box-sizing: border-box;
+}
+
+.header,
+.section,
+.emptyPanel {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+}
+
+.header {
+  padding: 32rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24rpx;
+}
+
+.title {
+  display: block;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  line-height: $line-height-tight;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 12rpx;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.status {
+  flex-shrink: 0;
+  padding: 6rpx 18rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.statusPending {
+  background: rgba(245, 158, 11, 0.12);
+  color: $color-status-pending;
+}
+
+.statusConfirmed {
+  background: rgba(16, 185, 129, 0.12);
+  color: $color-status-confirmed;
+}
+
+.statusCompleted {
+  background: rgba(59, 130, 246, 0.12);
+  color: $color-status-completed;
+}
+
+.statusCancelled {
+  background: rgba(107, 114, 128, 0.12);
+  color: $color-status-cancelled;
+}
+
+.section {
+  margin-top: 24rpx;
+  padding: 28rpx 32rpx;
+}
+
+.sectionTitle {
+  display: block;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid $color-divider;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.row {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 16rpx;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  width: 140rpx;
+  flex-shrink: 0;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.value {
+  flex: 1;
+  min-width: 0;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  word-break: break-all;
+}
+
+.actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 32rpx;
+}
+
+.primaryBtn,
+.cancelBtn,
+.secondaryBtn {
+  flex: 1;
+  height: $button-height-md;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.primaryBtn {
+  color: #fff;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+}
+
+.cancelBtn,
+.secondaryBtn {
+  color: $color-text-secondary;
+  background: $color-bg-hover;
+  border: 1rpx solid $color-border;
+}
+
+.emptyPanel {
+  margin-top: 48rpx;
+  padding: 48rpx 32rpx;
+  text-align: center;
+}
+
+.empty {
+  display: block;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}
+
+.secondaryBtn {
+  margin-top: 28rpx;
+}

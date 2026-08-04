@@ -12,6 +12,7 @@
   display: flex;
   gap: 16rpx;
   margin-top: 24rpx;
+  margin-bottom: 24rpx;
   overflow-x: auto;
   @include scroll-x-container;
 }
@@ -30,6 +31,9 @@
   color: $color-text-secondary;
   white-space: nowrap;
   transition: all $transition-base;
+  border-radius: 20rpx;
+  margin: 0rpx 10rpx;
+  padding: 0rpx 10rpx;
 
   &Active {
     background: $color-primary;

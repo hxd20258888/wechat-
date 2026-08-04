@@ -82,3 +82,16 @@ export interface AppointmentForm {
   carModel: string;
   remark: string;
 }
+
+export interface AvailableDate {
+  date: string;
+  availableCount: number;
+}
+
+export interface AppointmentCreateResult {
+  _id: string;
+  status: AppointmentStatus;
+  serviceName: string;
+  date: string;
+  timeSlot: string;
+}

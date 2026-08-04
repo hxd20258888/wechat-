@@ -7,12 +7,13 @@ export default defineAppConfig({
     'pages/admin/index',
     'pages/adminServices/index',
     'pages/adminTimeSlots/index',
-    'pages/adminAppointments/index'
+    'pages/adminAppointments/index',
+    'pages/appointmentDetail/index'
   ],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#0F0F1A',
-    navigationBarTitleText: '车音工坊',
+    navigationBarTitleText: '小亮云办公',
     navigationBarTextStyle: 'white'
   },
   tabBar: {

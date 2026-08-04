@@ -384,3 +384,141 @@
   color: $color-text-tertiary;
   font-size: $font-size-sm;
 }
+
+.dateItemCount {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  display: block;
+  margin-top: 6rpx;
+}
+
+.emptyState {
+  padding: 48rpx 32rpx;
+  background: $color-bg-card;
+  border: 1rpx solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+  text-align: center;
+}
+
+.retryBtn,
+.secondaryBtn {
+  margin-top: 24rpx;
+  height: $button-height-md;
+  border-radius: $radius-button;
+  border: 1rpx solid $color-border;
+  background: $color-bg-hover;
+  color: $color-text-secondary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+}
+
+.resultPanel {
+  margin-top: 48rpx;
+  padding: 40rpx 32rpx;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.resultTitle {
+  display: block;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  text-align: center;
+}
+
+.resultDesc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: $font-size-md;
+  color: $color-primary;
+  text-align: center;
+}
+
+.resultRows {
+  margin-top: 32rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid $color-divider;
+}
+
+.resultRow {
+  display: block;
+  margin-bottom: 16rpx;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.resultActions {
+  margin-top: 32rpx;
+}
+
+.authMask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: flex-end;
+}
+
+.authSheet {
+  width: 100%;
+  padding: 36rpx 32rpx calc(36rpx + env(safe-area-inset-bottom));
+  background: $color-bg-card;
+  border-radius: $radius-lg $radius-lg 0 0;
+  box-sizing: border-box;
+}
+
+.authTitle {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.authDesc {
+  display: block;
+  margin: 12rpx 0 28rpx;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.avatarBtn {
+  height: $button-height-md;
+  margin: 0 0 24rpx;
+  padding: 0;
+  border-radius: $radius-button;
+  background: $color-bg-hover;
+  border: 1rpx solid $color-border;
+  color: $color-text-primary;
+  font-size: $font-size-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::after {
+    border: none;
+  }
+}
+
+.authActions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 28rpx;
+
+  .secondaryBtn,
+  .submitBtn {
+    margin-top: 0;
+  }
+}

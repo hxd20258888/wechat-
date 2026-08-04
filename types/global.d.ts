@@ -23,5 +23,10 @@ declare namespace NodeJS {
      * @see https://taro-docs.jd.com/docs/next/env-mode-config#特殊环境变量-taro_app_id
      */
     TARO_APP_ID: string
+    /**
+     * 通用 HTTP API 基础域名，例如 https://api.example.com。
+     * 未配置时微信端会回退到旧微信云函数，非微信端会提示配置 API。
+     */
+    TARO_APP_API_BASE_URL?: string
   }
 }

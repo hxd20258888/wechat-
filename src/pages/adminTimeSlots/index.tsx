@@ -67,14 +67,25 @@ function AdminTimeSlotsPage() {
 
   const handleSaveWeekly = async () => {
     try {
-      await callFunction('manageTimeSlot', {
+      const result = await callFunction<{
+        generatedCount: number;
+        updatedCount: number;
+        closedCount: number;
+      }>('manageTimeSlot', {
         action: 'updateWeekly',
         configs: weeklyConfigs
       });
-      Taro.showToast({ title: '保存成功', icon: 'success' });
+      Taro.showToast({
+        title: `已生成${result.generatedCount}个时段`,
+        icon: 'success'
+      });
+      if (selectedDate) {
+        loadSlots(selectedDate);
+      }
     } catch (err) {
       console.error('[AdminTimeSlots] saveWeekly failed:', err);
-      Taro.showToast({ title: '保存失败', icon: 'none' });
+      const message = err instanceof Error ? err.message : '保存失败';
+      Taro.showToast({ title: message, icon: 'none' });
     }
   };
 
