@@ -1,4 +1,5 @@
-﻿import Taro from '@tarojs/taro'
+import Taro from '@tarojs/taro'
+import { callHttpFunction, hasApiBaseUrl } from './api'
 
 const isWeapp = process.env.TARO_ENV === 'weapp'
 
@@ -6,8 +7,12 @@ export async function callFunction<T = any>(
   name: string,
   data?: Record<string, any>
 ): Promise<T> {
+  if (hasApiBaseUrl()) {
+    return callHttpFunction<T>(name, data)
+  }
+
   if (!isWeapp) {
-    throw new Error(`[Cloud] ${name} 只能在微信小程序端调用`)
+    throw new Error(`[API] ${name} 需要配置 TARO_APP_API_BASE_URL`)
   }
 
   const res = await Taro.cloud.callFunction({ name, data })
