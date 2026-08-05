@@ -1,0 +1,73 @@
+{
+  "name": "tuning-mini-program",
+  "version": "1.0.0",
+  "private": true,
+  "description": "调音/改装/保养/诊断 预约小程序（Taro + Vercel）",
+  "templateInfo": {
+    "name": "default",
+    "typescript": true,
+    "css": "sass"
+  },
+  "scripts": {
+    "build:weapp": "taro build --type weapp",
+    "build:swan": "taro build --type swan",
+    "build:alipay": "taro build --type alipay",
+    "build:tt": "taro build --type tt",
+    "build:qq": "taro build --type qq",
+    "build:jd": "taro build --type jd",
+    "build:rn": "taro build --type rn",
+    "build:h5": "taro build --type h5",
+    "dev:weapp": "npm run build:weapp -- --watch",
+    "dev:h5": "npm run build:h5 -- --watch",
+    "dev:api": "node -r ts-node/register api/index.ts",
+    "typecheck": "tsc --noEmit",
+    "db:init": "node scripts/init-db.js",
+    "taro": "taro"
+  },
+  "browserslist": [
+    "last 3 versions",
+    "Android >= 4.1",
+    "ios >= 8"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.22.0",
+    "@tarojs/api": "4.1.9",
+    "@tarojs/components": "4.1.9",
+    "@tarojs/helper": "4.1.9",
+    "@tarojs/plugin-framework-react": "4.1.9",
+    "@tarojs/plugin-html": "4.1.9",
+    "@tarojs/plugin-platform-alipay": "4.1.9",
+    "@tarojs/plugin-platform-h5": "4.1.9",
+    "@tarojs/plugin-platform-tt": "4.1.9",
+    "@tarojs/plugin-platform-weapp": "4.1.9",
+    "@tarojs/react": "4.1.9",
+    "@tarojs/runtime": "4.1.9",
+    "@tarojs/shared": "4.1.9",
+    "@tarojs/taro": "4.1.9",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.0",
+    "@babel/preset-react": "^7.22.0",
+    "@tarojs/cli": "4.1.9",
+    "@tarojs/plugin-doctor": "0.0.13",
+    "@tarojs/webpack5-runner": "4.1.9",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.11.0",
+    "@types/pg": "^8.11.0",
+    "@types/react": "^18.0.0",
+    "@types/webpack-env": "^1.13.6",
+    "babel-preset-taro": "4.1.9",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.0",
+    "sass": "^1.60.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.1.0",
+    "webpack": "5.91.0"
+  }
+}

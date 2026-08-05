@@ -1,0 +1,99 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  padding: 0 $page-padding;
+  padding-bottom: 40rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.header {
+  margin-top: 24rpx;
+  padding: 32rpx;
+  background: linear-gradient(135deg, #FF6B35 0%, #E05A2B 100%);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+
+  &Title {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: #fff;
+    display: block;
+  }
+
+  &Desc {
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.8);
+    display: block;
+    margin-top: 8rpx;
+  }
+}
+
+.stats {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.statItem {
+  flex: 1;
+  padding: 24rpx;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  text-align: center;
+
+  &Value {
+    font-size: 48rpx;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    display: block;
+  }
+
+  &Label {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    display: block;
+    margin-top: 8rpx;
+  }
+}
+
+.menuGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 32rpx;
+}
+
+.menuItem {
+  width: calc(50% - 8rpx);
+  padding: 32rpx 24rpx;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.97);
+  }
+
+  &Icon {
+    font-size: 48rpx;
+  }
+
+  &Label {
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+  }
+
+  &Desc {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+  }
+}

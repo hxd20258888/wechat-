@@ -1,0 +1,18 @@
+{
+  "miniprogramRoot": "dist/weapp/",
+  "projectname": "tuning-mini-program",
+  "description": "调音/改装/保养/诊断 预约小程序",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": false,
+    "es6": false,
+    "enhance": false,
+    "compileHotReLoad": false,
+    "postcss": false,
+    "minified": false,
+    "ignoreUploadUnusedFiles": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.5.0",
+  "srcMiniprogramRoot": "dist/weapp/"
+}

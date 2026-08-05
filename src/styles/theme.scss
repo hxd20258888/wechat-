@@ -1,0 +1,40 @@
+// ============================================
+// 主题配色变量 — 车音工坊（深色科技风）
+// ============================================
+
+// 品牌主题色：活力橙，汽车调音能量感
+$color-primary: #FF6B35;
+$color-primary-light: #FF8F66;
+$color-primary-dark: #E05A2B;
+
+// 功能色
+$color-success: #10B981;
+$color-warning: #F59E0B;
+$color-error: #EF4444;
+$color-info: #3B82F6;
+
+// 背景色（深色主题）
+$color-bg-page: #0F0F1A;
+$color-bg-card: #1A1A2E;
+$color-bg-hover: #22223A;
+$color-bg-input: #16162B;
+
+// 文本色
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #B0B8C8;
+$color-text-tertiary: #6B7280;
+$color-text-disabled: #4A4A5A;
+$color-text-white: #FFFFFF;
+
+// 边框色
+$color-border: #2A2A3E;
+$color-divider: #1E1E32;
+
+// 业务相关
+$color-price: #FF6B35;
+$color-tag-bg: rgba(255, 107, 53, 0.12);
+$color-tag-text: #FF8F66;
+$color-status-pending: #F59E0B;
+$color-status-confirmed: #10B981;
+$color-status-completed: #3B82F6;
+$color-status-cancelled: #6B7280;
