@@ -1,11 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build:h5",
+  "buildCommand": "npm run build:server && npm run build:h5",
   "outputDirectory": "dist/h5",
   "cleanUrls": true,
   "functions": {
     "api/server.js": {
-      "includeFiles": "server/**"
+      "includeFiles": "server-build/**"
     }
   },
   "rewrites": [
