@@ -5,7 +5,7 @@
   "cleanUrls": true,
   "functions": {
     "api/server.js": {
-      "includeFiles": "api/**"
+      "includeFiles": "server/**"
     }
   },
   "rewrites": [

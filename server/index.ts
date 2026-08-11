@@ -1,3 +1,4 @@
+import { loadLocalEnv } from './lib/env'
 import express from 'express'
 import cors from 'cors'
 import { errorHandler, notFoundHandler } from './lib/http'
@@ -7,6 +8,8 @@ import categoriesRouter from './routes/categories'
 import servicesRouter from './routes/services'
 import timeSlotsRouter from './routes/timeSlots'
 import appointmentsRouter from './routes/appointments'
+
+loadLocalEnv()
 
 const app = express()
 

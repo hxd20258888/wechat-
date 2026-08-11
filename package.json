@@ -19,7 +19,7 @@
     "build:h5": "taro build --type h5",
     "dev:weapp": "npm run build:weapp -- --watch",
     "dev:h5": "npm run build:h5 -- --watch",
-    "dev:api": "node -r ts-node/register api/index.ts",
+    "dev:api": "node -r ts-node/register server/index.ts",
     "typecheck": "tsc --noEmit",
     "db:init": "node scripts/init-db.js",
     "taro": "taro"

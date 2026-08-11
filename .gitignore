@@ -3,7 +3,7 @@ node_modules/
 
 # Taro 构建产物
 dist/
-lib/
+/lib/
 
 # 环境变量（生产密钥不入库）
 .env

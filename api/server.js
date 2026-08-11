@@ -1,3 +1,3 @@
 require('ts-node/register/transpile-only')
 
-module.exports = require('./index.ts').default
+module.exports = require('../server/index.ts').default
