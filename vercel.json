@@ -3,6 +3,11 @@
   "buildCommand": "npm run build:h5",
   "outputDirectory": "dist/h5",
   "cleanUrls": true,
+  "functions": {
+    "api/index.ts": {
+      "includeFiles": "api/**"
+    }
+  },
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/index" },
     { "source": "/api", "destination": "/api/index" },
