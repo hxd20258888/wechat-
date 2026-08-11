@@ -4,13 +4,13 @@
   "outputDirectory": "dist/h5",
   "cleanUrls": true,
   "functions": {
-    "api/index.ts": {
+    "api/server.js": {
       "includeFiles": "api/**"
     }
   },
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/index" },
-    { "source": "/api", "destination": "/api/index" },
+    { "source": "/api/:path*", "destination": "/api/server" },
+    { "source": "/api", "destination": "/api/server" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
